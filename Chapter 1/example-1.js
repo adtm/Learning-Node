@@ -17,11 +17,16 @@ console.log("Server is listening on port: " + server.address().port);
  *
  * 2. Prefork Multiprocessing Model - prefork MPM,
  * putting task on different processes, being thread safe.
+ * Processes communicate by sockets - IPC.
+ * 
  * #The advantage - processes (memory intensive) don't scale so much as threads
  *
  * 3. Worker MPM - each request is handled with a separete thread.
  * It's more efficient than a memory perspective, but you have to handle thread
  * safety.
  *
- * Node is based on events and callbacks
+ * Node is based on events and callbacks - you send a function, which will be 
+ * executed when a specific event will be trigerred.
+ * If doing asynchronous requests and the Node.js functional implementation
+ * is done in C++, it will create more threads.
  */

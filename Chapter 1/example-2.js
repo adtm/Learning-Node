@@ -3,7 +3,7 @@ const fs = require("fs");
 
 const server = http
   .createServer((req, res) => {
-    fs.readFile("./hello-world.js", "utf-8", (err, data) => {
+    fs.readFile("./example-1.js", "utf-8", (err, data) => {
       res.writeHead(200, { "Content-Type": "text/plain" });
       if (err) res.write("Could not read file!");
       else res.write(data);
