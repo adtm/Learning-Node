@@ -54,7 +54,7 @@ process.stdin.on("data", data => {
 });
 
 client.on("data", data => {
-  console.log("[got from server]: " + data);
+  console.log("[got from server]: " + cdata);
 });
 
 client.on("close", () => {
