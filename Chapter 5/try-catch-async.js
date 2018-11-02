@@ -13,9 +13,9 @@ try {
     fs.writeFile("./oranges.txt", adjData, err => {
       if (err) throw err;
     });
+    const timeEnd = console.timeEnd();
+    console.log(timeEnd - timeStart); // 1
   });
-  const timeEnd = console.timeEnd();
-  console.log(timeEnd - timeStart); // 1
 } catch (err) {
   console.error(err);
 }
