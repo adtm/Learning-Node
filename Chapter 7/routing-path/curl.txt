@@ -1,0 +1,2 @@
+curl --request GET url
+curl --request posT url --data "name=Tomas&price=millions"
