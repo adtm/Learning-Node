@@ -10,23 +10,24 @@
  * Useful for applicatoin with a lot of queries, but not for applications
  * with lots of data writting and reading (Redis - single machine)
  */
-const net = require("net");
+const http = require("http");
 const redis = require("redis");
 
-net
-  .createServer(conn => {
+http
+  .createServer((req, res) => {
+    req.setEncoding("utf8");
     console.log("[connected]");
 
     const client = redis.createClient(); // params: port, host, options
     client.on("error", err => console.error("[error]: " + err));
-
     client.select(5); // change database for currect connection
 
-    conn.on("data", data => {
-      console.log(data + " from " + conn.remoteAddress + " " + conn.remotePort);
+    let chunks = "";
+    req.on("data", chunk => (chunks += chunk));
+
+    req.on("end", () => {
       try {
-        console.log(data.toString());
-        const obj = JSON.parse(data);
+        const obj = JSON.parse(chunks);
 
         client.hset(obj.member, "first_name", obj.first_name, redis.print);
         client.hset(obj.member, "last_name", obj.last_name, redis.print);
@@ -35,23 +36,10 @@ net
 
         client.zadd("Zowie!", parseInt(obj.score), obj.member);
       } catch (err) {
-        console.log(err);
+        console.log("err" + err);
       }
-    });
-    conn.on("close", () => {
-      console.log("[client] connection closed");
-      client.quit();
     });
   })
   .listen(8080, () => console.log("Listening on port: 8080"));
 
-/**
- * curl -X POST -H
- * "Content-Type: application/json" -d
- * "{
- *     \"member\": 400,
- *     \"first_name"\: \"Tomas\",
- *     \"last_name\": \"Loverance\",
- *     \"score\": 5,
- *     \"date\": \"10/10/1893\" }"
- */
+// curl - d "{ \"member\": 400, \"first_name\": \"Tomas\", \"last_name\": \"Loverance\", \"score\": 5, \"date\": \"10/10/1893\" }" localhost: 8080
