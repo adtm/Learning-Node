@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>Socket.io</title>
+  </head>
+  <body>
+    <div id="output"></div>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io("http://localhost:8080");
+    socket.on("news", data => {
+      const html = `<p>${data.news}</p>`;
+
+      document.getElementById("output").innerHTML = html;
+
+      setTimeout(() => socket.emit("echo", { back: data.news }), 100);
+    });
+  </script>
+</html>
